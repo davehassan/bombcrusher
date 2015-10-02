@@ -28,7 +28,7 @@ class Board
 
   def fill
     bombs = [[0,0]]
-    bombs.each { |pos| self[pos] = Tile.new(:b, pos)}
+    bombs.each { |pos| self[pos] = Tile.new(true, pos)}
     grid.each_with_index do |row, idx|
       row.each_index do |idy|
         pos = [idx, idy]
