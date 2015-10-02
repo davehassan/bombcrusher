@@ -17,7 +17,7 @@ class Minesweeper
 
     if char == 'r'
       end_game if board[pos].bomb
-      board[pos].reveal
+      board.reveal(pos)
     else
       board[pos].flag
     end
@@ -32,10 +32,11 @@ class Minesweeper
   end
 
   def render
+
   end
 
   def end_game
-    board.each_index { |row| row.each { |tile| tile.reveal!} }
+    board.each { |row| row.each { |tile| tile.reveal!} }
     render
     game_over = true
     puts "GAME OVER x_x"

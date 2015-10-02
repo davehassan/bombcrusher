@@ -48,4 +48,11 @@ class Board
     positions
   end
 
+  def reveal(pos)
+    cur_tile = self[pos]
+    cur_tile.reveal
+    if cur_tile.neighbor_bomb_count(self) == 0
+      cur_tile.neighbors.each { |tile| reveal(tile.pos) }
+    end
+  end
 end
