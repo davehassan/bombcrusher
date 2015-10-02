@@ -32,6 +32,21 @@ class Minesweeper
   end
 
   def render
+    display = []
+    board.each do |row|
+      line = []
+      row.each do |tile|
+        if tile.flagged
+          line << "F"
+        elsif !tile.revealed
+          line << "*"
+        else
+          c = tile.neighbor_bomb_count(board)
+          c == 0 ? line << "_" : line << c.to_s
+        end
+      end
+      puts line
+    end
 
   end
 
