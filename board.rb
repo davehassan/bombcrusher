@@ -1,11 +1,12 @@
 class Board
 
-  attr_reader :dim
+  attr_reader :dim, :num_bombs
   attr_accessor :grid
 
   def initialize(dim = [9,9], num_bombs = 6)
     @dim = dim
     @grid = Array.new(dim[0]) {Array.new(dim[1])}
+    @num_bombs = num_bombs
     self.fill
   end
 
@@ -24,11 +25,11 @@ class Board
 
   def fill
     bombs = bomb_pos
+    bombs.each { |pos| self[pos] = Tile.new(:b, pos, self)}
     grid.each_with_index do |row, idx|
       row.each_index do |idy|
         pos = [idx, idy]
-        bombs.include?(pos) ? val = :b : val = nil
-        self[pos] = Tile.new(val, pos, self)
+        self[pos] = Tile.new(nil, pos, self) unless bombs.include?(pos) 
       end
     end
   end
