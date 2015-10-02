@@ -1,10 +1,11 @@
 require_relative 'board'
+require 'byebug'
 
 class Minesweeper
 
-  attr_accessor :game_over
+  attr_accessor :game_over, :board
 
-  def initialize()
+  def initialize(dim, num_bombs)
     @board = Board.new(dim, num_bombs)
     @game_over = false
   end
@@ -12,59 +13,64 @@ class Minesweeper
   def handle_input
     puts "Please enter a command eg: 'r2,5' to reveal [2, 5]"
     input = gets.chomp
-    char = input.shift
-    pos = input.split(",").map { |x| x.to_i}
+    char = input.split("").shift
+    pos = input[1..-1].split(",").map { |x| x.to_i}
 
     if char == 'r'
-      end_game if board[pos].bomb
-      board.reveal(pos)
+      end_game if self.board[pos].bomb
+      self.board.reveal(pos)
     else
-      board[pos].flag
+      self.board[pos].flag
     end
   end
 
   def run
-    until game_over?
+    until game_over
+      # debugger
       render
       handle_input
-      check_game_state
+      puts "Congratulations!" if check_if_won
     end
   end
 
   def render
     display = []
-    board.each do |row|
-      line = []
+    self.board.grid.each do |row|
+      line = ""
       row.each do |tile|
         if tile.flagged
-          line << "F"
+          line += "F "
         elsif !tile.revealed
-          line << "*"
+          line += "* "
         else
-          c = tile.neighbor_bomb_count(board)
-          c == 0 ? line << "_" : line << c.to_s
+          c = tile.neighbor_bomb_count(self.board)
+          c == 0 ? line += "_ " : line += "#{c} "
         end
       end
-      puts line
+      puts line.chomp
     end
 
   end
 
   def end_game
-    board.each { |row| row.each { |tile| tile.reveal!} }
+    self.board.grid.each { |row| row.each { |tile| tile.reveal!} }
     render
     game_over = true
     puts "GAME OVER x_x"
   end
 
-  def check_game_state
+  def check_if_won
+    game_over = self.board.grid.all? do |row|
+      row.all? { |tile| tile.revealed? unless tile.bomb}
+    end
   end
 
 end
 
 
-
-
 if __FILE__ == $0
-  #things
+  dim = ARGV.shift.split("x").map { |x| x.to_i}
+  num_bombs = ARGV.shift.to_i
+  game = Minesweeper.new(dim, num_bombs)
+  game.run
 end

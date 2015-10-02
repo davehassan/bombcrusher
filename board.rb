@@ -1,4 +1,5 @@
 require_relative 'tile'
+require 'byebug'
 
 class Board
 
@@ -6,6 +7,7 @@ class Board
   attr_accessor :grid
 
   def initialize(dim = [9,9], num_bombs = 10)
+    # byebug
     @dim = dim
     @grid = Array.new(dim[0]) {Array.new(dim[1])}
     @num_bombs = num_bombs
@@ -27,23 +29,23 @@ class Board
   end
 
   def fill
-    bombs = [[0,0]]
-    bombs.each { |pos| self[pos] = Tile.new(true, pos)}
+    bombs = bomb_pos
+    bombs.each { |pos| self[pos] = Tile.new(true, pos) }
     grid.each_with_index do |row, idx|
       row.each_index do |idy|
         pos = [idx, idy]
-        self[pos] = Tile.new(nil, pos) unless bombs.include?(pos)
+        self[pos] = Tile.new(false, pos) unless bombs.include?(pos)
       end
     end
 
-    grid.each { |row| row.each { |tile| tile.neighbors(self)}}
+    #grid.each { |row| row.each { |tile| tile.neighbors(self)}}
   end
 
   def bomb_pos
     positions = []
-    while bomb_pos.count < num_bombs
+    while positions.count < num_bombs
       pos = [rand(dim[0]), rand(dim[1])]
-      positions << (pos unless positions.include?(pos))
+      positions << pos unless positions.include?(pos)
     end
     positions
   end
@@ -52,7 +54,7 @@ class Board
     cur_tile = self[pos]
     cur_tile.reveal
     if cur_tile.neighbor_bomb_count(self) == 0
-      cur_tile.neighbors.each { |tile| reveal(tile.pos) }
+      cur_tile.neighbors(self).each { |xy| reveal(xy) }
     end
   end
 end

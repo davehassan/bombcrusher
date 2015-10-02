@@ -31,14 +31,15 @@ class Tile
     DELTAS.each do |delta|
       a,b = delta
       try = [a + x, b + y]
-      neighbor_array << board[try] if board.in_bounds?(try)
+      neighbor_array << try if board.in_bounds?(try)
     end
 
+    neighbor_array
   end
 
   def neighbor_bomb_count(board)
     neighbor_array = neighbors(board)
-    neighbor_array.count { |tile| self.bomb }
+    neighbor_array.count { |pos| board[pos].bomb }
   end
 
   def inspect
