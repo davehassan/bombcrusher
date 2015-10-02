@@ -5,7 +5,7 @@ class Board
   attr_reader :dim, :num_bombs
   attr_accessor :grid
 
-  def initialize(dim = [9,9], num_bombs = 6)
+  def initialize(dim = [9,9], num_bombs = 10)
     @dim = dim
     @grid = Array.new(dim[0]) {Array.new(dim[1])}
     @num_bombs = num_bombs

@@ -18,6 +18,10 @@ class Tile
     self.revealed = true unless flagged
   end
 
+  def reveal!
+    self.revealed = true
+  end
+
   def neighbors(board)
 
     neighbor_array = []
@@ -39,6 +43,10 @@ class Tile
 
   def inspect
     [self.pos, self.bomb]
+  end
+
+  def flag
+    self.flagged = !self.flagged
   end
 
 end
