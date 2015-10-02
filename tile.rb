@@ -16,10 +16,11 @@ class Tile
 
   def reveal
     self.revealed = true unless flagged
-
   end
 
   def neighbors(board)
+
+    neighbor_array = []
 
     x,y = self.pos
 
@@ -29,11 +30,10 @@ class Tile
       neighbor_array << board[try] if board.in_bounds?(try)
     end
 
-    neighbor_bomb_count unless bomb
-    nil
   end
 
-  def neighbor_bomb_count
+  def neighbor_bomb_count(board)
+    neighbor_array = neighbors(board)
     neighbor_array.count { |tile| self.bomb }
   end
 
