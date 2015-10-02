@@ -1,6 +1,14 @@
 require_relative 'board'
 require 'byebug'
 
+MAX_STACK_SIZE = 200
+tracer = proc do |event|
+  if event == 'call' && caller_locations.length > MAX_STACK_SIZE
+    fail "Probable Stack Overflow"
+  end
+end
+set_trace_func(tracer)
+
 class Minesweeper
 
   attr_accessor :game_over, :board
@@ -26,7 +34,7 @@ class Minesweeper
 
   def run
     until game_over
-      # debugger
+      system("clear")
       render
       handle_input
       puts "Congratulations!" if check_if_won
@@ -42,6 +50,8 @@ class Minesweeper
           line += "F "
         elsif !tile.revealed
           line += "* "
+        elsif tile.bomb && tile.revealed
+          line += "X "
         else
           c = tile.neighbor_bomb_count(self.board)
           c == 0 ? line += "_ " : line += "#{c} "
@@ -61,7 +71,7 @@ class Minesweeper
 
   def check_if_won
     game_over = self.board.grid.all? do |row|
-      row.all? { |tile| tile.revealed? unless tile.bomb}
+      row.all? { |tile| tile.bomb ? !tile.revealed : tile.revealed }
     end
   end
 

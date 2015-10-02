@@ -54,7 +54,11 @@ class Board
     cur_tile = self[pos]
     cur_tile.reveal
     if cur_tile.neighbor_bomb_count(self) == 0
-      cur_tile.neighbors(self).each { |xy| reveal(xy) }
+      cur_tile.neighbors(self).each do |xy|
+        reveal(xy) unless self[xy].revealed
+      end
     end
   end
+
+  
 end
