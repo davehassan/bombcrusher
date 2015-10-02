@@ -65,7 +65,7 @@ class Minesweeper
   def end_game
     self.board.grid.each { |row| row.each { |tile| tile.reveal!} }
     render
-    game_over = true
+    self.game_over = true
     puts "GAME OVER x_x"
   end
 
