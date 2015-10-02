@@ -1,22 +1,25 @@
 class Board
 
+  attr_reader :dim
+  attr_accessor :grid
+
   def initialize(dim = [9,9], num_bombs = 6)
     @dim = dim
     @grid = Array.new(dim[0]) {Array.new(dim[1])}
     self.fill
   end
 
-
-  def dimensions
+  def in_bounds?(pos)
+    (0...dim[0]).include?(pos[0]) && (0...dim[1]).include?(pos[1])
   end
 
-  def in_bounds?
+  def [](pos)
+    x,y = pos
+    grid[x][y]
   end
 
-  def []
-  end
-
-  def []=
+  def []=(pos, value)
+      self[pos] = value
   end
 
   def fill
