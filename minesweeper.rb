@@ -37,7 +37,7 @@ class Minesweeper
       system("clear")
       render
       handle_input
-      puts "Congratulations!" if check_if_won
+      puts "Congratulations! '_' " if check_if_won
     end
   end
 
@@ -70,7 +70,7 @@ class Minesweeper
   end
 
   def check_if_won
-    game_over = self.board.grid.all? do |row|
+    self.game_over = self.board.grid.all? do |row|
       row.all? { |tile| tile.bomb ? !tile.revealed : tile.revealed }
     end
   end
