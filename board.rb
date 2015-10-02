@@ -16,8 +16,18 @@ class Board
   def []
   end
 
-  def fill
+  def []=
+  end
 
+  def fill
+    bombs = bomb_pos
+    grid.each_with_index do |row, idx|
+      row.each_index do |idy|
+        pos = [idx, idy]
+        bombs.include?(pos) ? val = :b : val = nil
+        self[pos] = Tile.new(val, pos, self)
+      end
+    end
   end
 
   def bomb_pos
@@ -28,5 +38,5 @@ class Board
     end
     bomb_pos
   end
-  
+
 end
