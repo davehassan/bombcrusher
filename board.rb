@@ -1,3 +1,5 @@
+require_relative 'tile'
+
 class Board
 
   attr_reader :dim, :num_bombs
@@ -20,27 +22,30 @@ class Board
   end
 
   def []=(pos, value)
-      self[pos] = value
+    x,y = pos
+    grid[x][y] = value
   end
 
   def fill
-    bombs = bomb_pos
-    bombs.each { |pos| self[pos] = Tile.new(:b, pos, self)}
+    bombs = [[0,0]]
+    bombs.each { |pos| self[pos] = Tile.new(:b, pos)}
     grid.each_with_index do |row, idx|
       row.each_index do |idy|
         pos = [idx, idy]
-        self[pos] = Tile.new(nil, pos, self) unless bombs.include?(pos) 
+        self[pos] = Tile.new(nil, pos) unless bombs.include?(pos)
       end
     end
+
+    grid.each { |row| row.each { |tile| tile.neighbors(self)}}
   end
 
   def bomb_pos
-    bomb_pos = []
+    positions = []
     while bomb_pos.count < num_bombs
       pos = [rand(dim[0]), rand(dim[1])]
-      bomb_pos << pos unless bomb_pos.include?(pos)
+      positions << (pos unless positions.include?(pos))
     end
-    bomb_pos
+    positions
   end
 
 end

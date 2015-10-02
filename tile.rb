@@ -1,6 +1,5 @@
 require_relative 'board'
 
-
 class Tile
 
   attr_accessor :value, :pos, :flagged, :revealed, :neighbor_array
@@ -8,12 +7,12 @@ class Tile
 
   DELTAS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]
 
-  def initialize(value = nil, pos = [], board)
+  def initialize(value = nil, pos = [])
     @pos = pos
-    @neighbor_array = neighbors(board)
+    @neighbor_array = []
     @flagged = false
     @revealed = false
-    @value = neighbor_bomb_count unless value == :b
+    @value = value
   end
 
   def reveal
@@ -30,11 +29,13 @@ class Tile
       neighbor_array << board[try] if board.in_bounds?(try)
     end
 
+    neighbor_bomb_count unless value == :b
     nil
   end
 
   def neighbor_bomb_count
-    neighbor_array.count { |tile| tile.value == :b }
+    bomb_count = neighbor_array.count { |tile| tile.value == :b }
+    self.value = bomb_count
   end
 
   def inspect
